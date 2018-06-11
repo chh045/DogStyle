@@ -7,3 +7,7 @@
 //
 
 import Foundation
+struct Dog {
+    let breed: String
+    let imageUrl: String
+}

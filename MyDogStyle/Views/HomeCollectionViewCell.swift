@@ -10,4 +10,20 @@ import UIKit
 
 class HomeCollectionViewCell: UICollectionViewCell {
     
+    @IBOutlet weak var dogImageView: UIImageView!
+    var imageUrl: URL? {
+        didSet {
+            if let url = imageUrl {
+                dogImageView.setImageWith(url)
+            }
+        }
+    }
+    
+    override func awakeFromNib() {
+        super.awakeFromNib()
+    }
+    
+    override func prepareForReuse() {
+        self.dogImageView.image = nil
+    }
 }
