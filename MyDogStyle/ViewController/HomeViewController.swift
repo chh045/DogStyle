@@ -28,8 +28,6 @@ class HomeViewController: UIViewController, UICollectionViewDelegate, UICollecti
     
     private let API = MyDogAPI.shared
     private var mode: HomeContentViewMode = .collectionView
-    private var imageArray = [String]()
-    private var breedArray: [Breed]!
     private var dogArray = [Dog]()
     private var cellInteritemSpace: CGFloat = 1
     private var cellLineSpace: CGFloat = 1
@@ -62,7 +60,6 @@ class HomeViewController: UIViewController, UICollectionViewDelegate, UICollecti
     }
     
     private func setupNavigationBarItems() {
-//        navigationController?.navigationBar.isTranslucent = false
         navigationItem.title = "Chuanqiao"
         setupNavButton(.add, side: .left)
         setupNavButton(.history, side: .right)
@@ -70,10 +67,10 @@ class HomeViewController: UIViewController, UICollectionViewDelegate, UICollecti
     
     private func setupNavButton(_ id: ButtonID, side: NavItem) {
         let button = UIButton(type: .system)
-        let image = UIImage(named: id.rawValue)!.resize(CGSize(width: 34, height: 34))
+        let image = UIImage(named: id.rawValue)!.resize(CGSize(width: 40, height: 40))
         button.setImage(image.withRenderingMode(.alwaysTemplate), for: .normal)
         button.tintColor = .lightGray
-        button.frame = CGRect(x: 0, y: 0, width: 34, height: 34)
+        button.frame = CGRect(x: 0, y: 0, width: 40, height: 40)
         button.imageView?.contentMode = .scaleAspectFit
         button.contentMode = .scaleAspectFit
         switch side {
@@ -82,8 +79,6 @@ class HomeViewController: UIViewController, UICollectionViewDelegate, UICollecti
         case .right:
             navigationItem.rightBarButtonItem = UIBarButtonItem(customView: button)
         }
-        
-        
     }
     
     func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
@@ -101,7 +96,7 @@ class HomeViewController: UIViewController, UICollectionViewDelegate, UICollecti
         switch mode {
         case .collectionView:
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: collectionViewCellID, for: indexPath) as! HomeCollectionViewCell
-            cell.imageUrl = URL(string: dogArray[indexPath.row].imageUrl)
+            cell.dog = dogArray[indexPath.row]
             return cell
         case .tableView:
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: tableViewCellID, for: indexPath) as! HomeTableCollectionViewCell
@@ -131,6 +126,4 @@ extension HomeViewController: HomeMenuHeaderDelegate {
         self.mode = mode
         self.dogContentCollectionView.reloadData()
     }
-    
-    
 }

@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import Alamofire
 
 class MyDogAPI {
     static let shared = MyDogAPI()
@@ -15,57 +16,33 @@ class MyDogAPI {
     func listAllBreeds(completion: @escaping (_ breeds: [Breed])->()) {
         
         let endpoint = "https://dog.ceo/api/breeds/list/all"
-        guard let url = URL(string: endpoint) else {
-            print("Error: cannot create URL")
-            return
-        }
-        let urlRequest = URLRequest(url: url)
-        let config = URLSessionConfiguration.default
-        let session = URLSession(configuration: config)
-        let task = session.dataTask(with: urlRequest) {
-            (data, response, error) in
-            if error != nil {
-                print("error calling GET on \(endpoint)", error!)
-                return
-            }
-            guard let responseData = data else {
-                print("Error: did not receive data")
-                return
+        Alamofire.request(endpoint).responseJSON { response in
+            guard response.result.isSuccess,
+                let responseData = response.data else {
+                    print("error fetching data: \(String(describing: response.result.error))")
+                    return
             }
             do {
                 let breeds = try Breed.parse(data: responseData)
                 DispatchQueue.main.async { [completion] in
                     completion(breeds)
                 }
-            } catch  {
+            } catch {
                 print("error trying to convert data to JSON")
                 return
             }
         }
-        task.resume()
     }
     
     
     func getImageUrlByBreed(breed: String, completion: @escaping (_ urlStrings: [String])->()) {
         
         let endpoint = "https://dog.ceo/api/breed/\(breed)/images"
-        
-        guard let url = URL(string: endpoint) else {
-            print("Error: cannot create URL")
-            return
-        }
-        let urlRequest = URLRequest(url: url)
-        let config = URLSessionConfiguration.default
-        let session = URLSession(configuration: config)
-        let task = session.dataTask(with: urlRequest) {
-            (data, response, error) in
-            if error != nil {
-                print("error calling GET on \(endpoint)", error!)
-                return
-            }
-            guard let responseData = data else {
-                print("Error: did not receive data")
-                return
+        Alamofire.request(endpoint).responseJSON { response in
+            guard response.result.isSuccess,
+                let responseData = response.data else {
+                    print("error fetching data: \(String(describing: response.result.error))")
+                    return
             }
             do {
                 let urlStrings = try Breed.getAllImagesUrl(data: responseData)
@@ -77,29 +54,17 @@ class MyDogAPI {
                 return
             }
         }
-        task.resume()
     }
     
     
     func getRandomImageByBreed(breed: String, completion: @escaping (_ urlString: String)->()) {
         
         let endpoint = "https://dog.ceo/api/breed/\(breed)/images"
-        guard let url = URL(string: endpoint) else {
-            print("Error: cannot create URL")
-            return
-        }
-        let urlRequest = URLRequest(url: url)
-        let config = URLSessionConfiguration.default
-        let session = URLSession(configuration: config)
-        let task = session.dataTask(with: urlRequest) {
-            (data, response, error) in
-            if error != nil {
-                print("error calling GET on \(endpoint)", error!)
-                return
-            }
-            guard let responseData = data else {
-                print("Error: did not receive data")
-                return
+        Alamofire.request(endpoint).responseJSON { response in
+            guard response.result.isSuccess,
+                let responseData = response.data else {
+                    print("error fetch data: \(String(describing: response.result.error))")
+                    return
             }
             do {
                 let urlStrings = try Breed.getAllImagesUrl(data: responseData)
@@ -107,12 +72,11 @@ class MyDogAPI {
                 DispatchQueue.main.async { [completion] in
                     completion(urlStrings[index])
                 }
-            } catch  {
+            } catch {
                 print("error trying to convert data to JSON")
                 return
             }
         }
-        task.resume()
     }
     
     
@@ -134,23 +98,13 @@ class MyDogAPI {
     }
     
     func getAllDogs(completion: @escaping ((_ dogs: [Dog])->())) {
+        
         let endpoint = "https://dog.ceo/api/breeds/list/all"
-        guard let url = URL(string: endpoint) else {
-            print("Error: cannot create URL")
-            return
-        }
-        let urlRequest = URLRequest(url: url)
-        let config = URLSessionConfiguration.default
-        let session = URLSession(configuration: config)
-        let task = session.dataTask(with: urlRequest) {
-            (data, response, error) in
-            if error != nil {
-                print("error calling GET on \(endpoint)", error!)
-                return
-            }
-            guard let responseData = data else {
-                print("Error: did not receive data")
-                return
+        Alamofire.request(endpoint).responseJSON { response in
+            guard response.result.isSuccess,
+                let responseData = response.data else {
+                    print("error fetching data: \(String(describing: response.result.error))")
+                    return
             }
             do {
                 let breeds = try Breed.parse(data: responseData)
@@ -166,12 +120,10 @@ class MyDogAPI {
                 imageGroup.notify(queue: .main) {
                     completion(dogs)
                 }
-            } catch  {
+            } catch {
                 print("error trying to convert data to JSON")
                 return
             }
         }
-        task.resume()
     }
-
 }

@@ -11,9 +11,9 @@ import UIKit
 class HomeCollectionViewCell: UICollectionViewCell {
     
     @IBOutlet weak var dogImageView: UIImageView!
-    var imageUrl: URL? {
+    var dog: Dog! {
         didSet {
-            if let url = imageUrl {
+            if let url = URL(string: dog.imageUrl) {
                 dogImageView.setImageWith(url)
             }
         }

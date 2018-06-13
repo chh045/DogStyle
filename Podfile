@@ -7,5 +7,6 @@ target 'MyDogStyle' do
 
   # Pods for MyDogStyle
   pod 'AFNetworking'
+  pod 'Alamofire'
 
 end
